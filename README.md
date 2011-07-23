@@ -4,7 +4,7 @@ Have you ever written code that you used in more than one project? Me too.
 
 This is a compilation of highly-reusable code for JavaScript.
 
-See also: [unstdlib.py](https://github.com/shazow/unstdlib.py) for Python.
+**See also:** [unstdlib.py](https://github.com/shazow/unstdlib.py) for Python.
 
 
 ## Highlights
@@ -22,6 +22,8 @@ Some cool noteworthy code in this library:
 At the time of writing this, there is no organization or philosophy for this library. It's a bunch of code I wrote on various projects like [LineRage](http://bit.ly/linerage-chrome) (a fast-paced canvas-based game that required a lot of fun optimizations). Some of the code is optimized excessively in interesting ways, whereas other parts are just convenience helpers.
 
 The spirit of the code within is to ignore error checking in favour of elegance and performance. Unexpected input will result in unexpected behaviour.
+
+*TODO: Rewrite this section once the code has been organized.*
 
 
 ## TODO
