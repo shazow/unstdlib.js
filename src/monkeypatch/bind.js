@@ -5,4 +5,3 @@ Function.prototype.bind = function(bind) {
         return self.apply(bind || null, args);
     };
 };
-
