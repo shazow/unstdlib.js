@@ -46,6 +46,8 @@ function make_grid(size, fn) {
 }
 
 function make_grid_fast(size, value) {
+    // Similar to ``make_grid`` but takes a fixed value instead of making a
+    // function call for each cell.
     var grid = [];
     var w = size[0]-1, h = size[1]-1;
     for (var x=w; x>=0; x--) {
