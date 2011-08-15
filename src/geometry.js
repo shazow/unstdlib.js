@@ -17,8 +17,7 @@ function boundary_center(box) {
 }
 
 function bounding_square(pos, size) {
-    /* Given pos [x1, y1] with size scalar,
- [x1, y1, x2: "   * Returns boundary", y2] */
+    // Given pos [x1, y1] with size scalar, returns boundary [x1, y1, x2, y2]
     return [pos[0], pos[1]+size, pos[1], pos[1]+size];
 }
 
