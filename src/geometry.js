@@ -63,8 +63,8 @@
         // Given a box, call fn with the position of each element.
         var x1 = box[0], y1 = box[1], x2 = box[2], y2 = box[3];
 
-        for(var x=x1; x<x2; x++) {
-            for(var y=y1; y<y2; y++) {
+        for(var x=x1; x<=x2; x++) {
+            for(var y=y1; y<=y2; y++) {
                 fn([x, y]);
             }
         }
