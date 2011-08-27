@@ -1,19 +1,27 @@
 (function() {
     /** Binary Search **/
 
+    /**
+     * @param {Array} a  Array to search.
+     * @param {*} val    Element to find within ``a``.
+     * @param {function} compare_fn  Function that takes (a, b) and returns 0 if
+     *                               a == b, a negative value if a < b, or a
+     *                               positive value if b > a.
+     *
+     * @returns {int} (Positive) index of the element if found (not necessarily
+     *                the first), otherwise (negative) negated index of
+     *                insertion point.
+     */
     var binary_search = unstdlib.binary_search = function(a, val, compare_fn) {
-        // Returns (positive) index of element if found (not necessarily the first),
-        // otherwise (negative) negated index of insertion point.
-
         var left = 0, right = a.length;
 
         // Tight loop optimization
         if(compare_fn) {
             while(left < right) {
                 var middle = (left + right) >> 1;
-                compare_fn(a[middle], val) ? left = middle + 1 : right = middle;
+                compare_fn(a[middle], val) < 0 ? left = middle + 1 : right = middle;
             }
-            return compare_fn(a[left], val) ? left : ~left;
+            return compare_fn(a[left], val) == 0 ? left : ~left;
         } else {
             while(left < right) {
                 var middle = (left + right) >> 1;

@@ -11,9 +11,9 @@ if [ ! -f "closure/compiler.jar" ]; then
 fi
 
 targets=""
-for t in src/*.js; do
-    targets="$targets --js $t"
-done
+while read line; do
+    targets="$targets --js $line";
+done < MANIFEST
 
 echo -n "Compiling... "
 $COMPILER_CMD $OUTPUT_FLAG $EXTRA_FLAGS $targets || exit -1

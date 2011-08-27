@@ -1,3 +1,5 @@
+unstdlib = window.unstdlib = {};
+
 (function() {
 
     /**
