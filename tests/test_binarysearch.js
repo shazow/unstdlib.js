@@ -10,6 +10,14 @@ test("no compare_fn", function() {
     equal(unstdlib.binary_search(a, 5), 4);
 });
 
+test("no compare_fn, empty", function() {
+    var a = [];
+
+    equal(unstdlib.binary_search(a, 1), ~0);
+    equal(unstdlib.binary_search(a, 5), ~0);
+    equal(unstdlib.binary_search(a, -5), ~0);
+});
+
 test("simple compare_fn", function() {
     var compare_fn = function(a,b) { return a-b; }
 
@@ -20,4 +28,14 @@ test("simple compare_fn", function() {
     equal(unstdlib.binary_search(a, 11, compare_fn), ~10);
     equal(unstdlib.binary_search(a, 0, compare_fn), ~0);
     equal(unstdlib.binary_search(a, 5, compare_fn), 4);
+});
+
+test("simple compare_fn, empty", function() {
+    var compare_fn = function(a,b) { return a-b; }
+
+    var a = [];
+
+    equal(unstdlib.binary_search(a, 1, compare_fn), ~0);
+    equal(unstdlib.binary_search(a, 5, compare_fn), ~0);
+    equal(unstdlib.binary_search(a, -5, compare_fn), ~0);
 });

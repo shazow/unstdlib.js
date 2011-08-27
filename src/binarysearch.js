@@ -15,19 +15,25 @@
     var binary_search = unstdlib.binary_search = function(a, val, compare_fn) {
         var left = 0, right = a.length;
 
+        if(right==0) return -1;
+
         // Tight loop optimization
         if(compare_fn) {
+
             while(left < right) {
                 var middle = (left + right) >> 1;
                 compare_fn(a[middle], val) < 0 ? left = middle + 1 : right = middle;
             }
             return compare_fn(a[left], val) == 0 ? left : ~left;
+
         } else {
+
             while(left < right) {
                 var middle = (left + right) >> 1;
                 a[middle] < val ? left = middle + 1 : right = middle;
             }
             return a[left] == val ? left : ~left;
+
         }
     }
 
