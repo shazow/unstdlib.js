@@ -1,4 +1,5 @@
-(function() {
+var unstdlib = (function(unstdlib) {
+
     /** Canvas context */
 
     var draw_grid_to_ctx = unstdlib.draw_grid_to_ctx = function(grid, ctx, box) {
@@ -14,4 +15,5 @@
         return [img.data[0], img.data[1], img.data[2]];
     }
 
-})();
+    return unstdlib;
+})(unstdlib || {});

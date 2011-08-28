@@ -12,7 +12,7 @@ This is a compilation of highly-reusable code for JavaScript.
 Some cool noteworthy code in this library:
 
 * ``iter_line(A, B, fn)`` in [src/geometry.js](https://github.com/shazow/unstdlib.js/blob/master/src/geometry.js) implements [Bresenham's line algorithm](http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm).
-* ``Cycle(a)`` in [src/core.js](https://github.com/shazow/unstdlib.js/blob/master/src/core.js) implements Python's ``itertools.cycle(iterable)``.
+* ``cycle(a)`` in [src/core.js](https://github.com/shazow/unstdlib.js/blob/master/src/core.js) implements Python's ``itertools.cycle(iterable)``.
 * ``CounterCallback(count, callback)`` in [src/core.js](https://github.com/shazow/unstdlib.js/blob/master/src/core.js) implements a really handy for executing a function on completion of a bunch of asynchronous calls.
 * [src/binarysearch.js](https://github.com/shazow/unstdlib.js/blob/master/src/binarysearch.js) contains optimized implementations of various binary search related functions.
 

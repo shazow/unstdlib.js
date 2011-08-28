@@ -1,6 +1,4 @@
-unstdlib = window.unstdlib = {};
-
-(function() {
+var unstdlib = (function(unstdlib) {
 
     /**
      * Given a list of values ``a``, return a function that infinitely cycles
@@ -8,17 +6,32 @@ unstdlib = window.unstdlib = {};
      *
      * Example:
      *
-     *     var c = Cycle([1,2,3]);
+     *     var c = cycle([1,2,3]);
      *     c() == 1;
      *     c() == 2;
      *     c() == 3;
      *     c() == 1;
      *
-     * @param   {array} a
+     * @param   {array} a  Array to cycle over.
+     * @param   {number} num_cycles  Number of cycles to perform before stopping.
+     * @param   {object} default     Default value to return when num_cycles elapsed.
      * @return  {function}
      */
-    var Cycle = unstdlib.Cycle = function(a) {
+    var cycle = unstdlib.cycle = function(a, num_cycles, default_) {
         var i = 0, stop = a.length;
+
+        if(num_cycles-- >= 0) {
+            return function() {
+                if(i==stop) {
+                    if(num_cycles <= 0) return default_;
+
+                    i = 0;
+                    num_cycles--;
+                }
+                return a[i++];
+            }
+        }
+
         return function() {
             if(i==stop) i = 0;
             return a[i++];
@@ -55,4 +68,5 @@ unstdlib = window.unstdlib = {};
         return r;
     }
 
-})();
+    return unstdlib;
+})(unstdlib || {});

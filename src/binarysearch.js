@@ -1,4 +1,5 @@
-(function() {
+var unstdlib = (function(unstdlib) {
+
     /** Binary Search **/
 
     /**
@@ -50,8 +51,9 @@
     var binary_remove = unstdlib.binary_remove = function(a, val, compare_fn) {
         // Returns removed element
 
-        var i= binary_search(a, val, compare_fn);
+        var i = binary_search(a, val, compare_fn);
         return (i >= 0) ? a.splice(i, 1)[0] : false;
     }
 
-})();
+    return unstdlib;
+})(unstdlib || {});

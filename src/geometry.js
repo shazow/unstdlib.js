@@ -1,4 +1,4 @@
-(function() {
+var unstdlib = (function(unstdlib) {
 
     /** Geometry and vectors **/
 
@@ -117,4 +117,5 @@
         return (pos[0] * dim[0] * dim[2]) + (pos[1] * dim[2]) + pos[2];
     }
 
-})();
+    return unstdlib;
+})(unstdlib || {});
