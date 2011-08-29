@@ -1,22 +1,42 @@
 #!/bin/bash
 
-COMPILER_CMD="java -jar closure/compiler.jar"
+function fetch_compiler() {
+    save_to="$1"
+    save_dir="${save_to%/*}"
+
+    mkdir -p "$save_dir"
+    (wget http://closure-compiler.googlecode.com/files/compiler-latest.tar.gz -O- | tar -xzv -f- -C "$save_dir") || fail "Could not download the compiler."
+}
+
+function add_prefix() {
+    sep="$1"
+    shift
+    while (($#)); do
+        echo -n "$sep $1 ";
+    shift
+    done
+}
+
+function fail() {
+    echo "Failed: $1"
+    exit -1
+}
+
+
+
+COMPILER_PATH="closure/compiler.jar"
+COMPILER_CMD="java -jar $COMPILER_PATH"
+
 OUTPUT_FLAG="--js_output_file unstdlib.js"
 #EXTRA_FLAGS="--compilation_level ADVANCED_OPTIMIZATIONS"
 
-if [ ! -f "closure/compiler.jar" ]; then
+if [ ! -f "$COMPILER_PATH" ]; then
     echo "Closure compiler not found, downloading..."
-    mkdir closure
-    wget http://closure-compiler.googlecode.com/files/compiler-latest.tar.gz -O- | tar -xzv -f- -C closure
+    fetch_compiler "$COMPILER_PATH"
 fi
 
-targets=""
-while read line; do
-    targets="$targets --js $line";
-done < MANIFEST
+targets="$(add_prefix --js src/*.js)"
 
 echo -n "Compiling... "
-$COMPILER_CMD $OUTPUT_FLAG $EXTRA_FLAGS $targets || exit -1
+$COMPILER_CMD $OUTPUT_FLAG $EXTRA_FLAGS $targets || fail "Could not compile."
 echo "Done."
-
-echo "Warning: monkeypatch files are not included by default."
