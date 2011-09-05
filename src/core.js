@@ -1,7 +1,7 @@
 var unstdlib = (function(unstdlib) {
 
     /**
-     * Given a list of values ``a``, return a function that infinitely cycles
+     * Given a list of values {@code a}, return a function that infinitely cycles
      * over each value by returning one every time it is called.
      *
      * Example:
@@ -12,10 +12,11 @@ var unstdlib = (function(unstdlib) {
      *     c() == 3;
      *     c() == 1;
      *
-     * @param   {array} a  Array to cycle over.
-     * @param   {number} num_cycles  Number of cycles to perform before stopping.
-     * @param   {object} default     Default value to return when num_cycles elapsed.
-     * @return  {function}
+     * @param {array}  a  Array to cycle over.
+     * @param {number} num_cycles  Number of cycles to perform before stopping.
+     * @param {object} default     Default value to return when num_cycles elapsed.
+     *
+     * @return {function}
      */
     var cycle = unstdlib.cycle = function(a, num_cycles, default_) {
         var i = 0, stop = a.length;
@@ -40,26 +41,35 @@ var unstdlib = (function(unstdlib) {
 
 
     /**
-     * Execute ``callback`` after ``count`` calls.
+     * Execute {@code callback} after {@code count} calls.
      *
      * Example:
      *
-     *     var cb = CounterCallback(5, function() { alert('Hello World'); });
+     *     var cb = counter_callback(5, function() { alert('Hello World'); });
      *     for(var i=0; i<5; i++) {
      *         some_async_func(cb); // alert pops up when i == 4
      *     }
      *
-     * @param   {int} count
-     * @param   {function} callback
-     * @return  {function}
+     * @param {int} count
+     * @param {function} callback
+     *
+     * @return {function}
      */
-    var CounterCallback = unstdlib.CounterCallback = function(count, callback) {
+    var counter_callback = unstdlib.counter_callback = function(count, callback) {
         return function() {
             if(--count == 0) callback();
         }
     }
 
 
+    /**
+     * Generate a reverse lookup object such that the values of the keys of the
+     * given object are the keys of the values of the returned object.
+     *
+     * @param {object} o
+     *
+     * @return {object}
+     */
     var inverse_lookup = unstdlib.inverse_lookup = function(o) {
         var r = {};
         for(var k in o) {

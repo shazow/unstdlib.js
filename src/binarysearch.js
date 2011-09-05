@@ -3,15 +3,17 @@ var unstdlib = (function(unstdlib) {
     /** Binary Search **/
 
     /**
+     * Find element {@code val} in array {@code a} or return the negated insertion
+     * point to maintain sorted order.
+     *
      * @param {Array} a  Array to search.
-     * @param {*} val    Element to find within ``a``.
-     * @param {function} compare_fn  Function that takes (a, b) and returns 0 if
-     *                               a == b, a negative value if a < b, or a
-     *                               positive value if b > a.
+     * @param {*} val  Element to find within {@code a}.
+     * @param {function(object, object)} compare_fn  Function that takes (a, b)
+     *     and returns 0 if a == b, a negative value if a < b, or a positive
+     *     value if b > a.
      *
      * @returns {int} (Positive) index of the element if found (not necessarily
-     *                the first), otherwise (negative) negated index of
-     *                insertion point.
+     *     the first), otherwise (negative) negated index of insertion point.
      */
     var binary_search = unstdlib.binary_search = function(a, val, compare_fn) {
         var left = 0, max = a.length, right = max;
