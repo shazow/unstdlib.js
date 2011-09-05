@@ -1,84 +1,160 @@
 var unstdlib = (function(unstdlib) {
 
-    /** Geometry and vectors **/
+    /**
+     * All types are two-dimensional here.
+     */
 
+    /** @typedef {{x: number, y: number}} */
+    unstdlib.Position;
+
+    /** @typedef {{x: number, y: number, width: number, height: number}} */
+    unstdlib.Box;
+
+    /** @typedef {{x: number, y: number, radius: number}} */
+    unstdlib.Circle;
+
+    /** @typedef {{width: number, height: number}} */
+    unstdlib.Size;
+
+
+    /**
+     * Determine if Position falls within Box.
+     *
+     * @param {unstdlib.Position} pos  Position to check.
+     * @param {unstdlib.Box} box       Bounding container for pos.
+     *
+     * @return {boolean}
+     */
     var in_boundary = unstdlib.in_boundary = function(pos, box) {
-        return pos[0] >= box[0] && // x1
-               pos[1] >= box[1] && // y1
-               pos[0] <= box[2] && // x2
-               pos[1] <= box[3];   // y2
+        return pos.x >= box.x &&
+               pos.y >= box.y &&
+               pos.x <= box.x + box.width &&
+               pos.y <= box.y + box.height;
     }
 
-    var in_radius = unstdlib.in_radius = function(pos, circle_pos, circle_radius) {
-        var dx = pos[0] - circle_pos[0], dy = pos[1] - circle_pos[1];
-        return circle_radius*circle_radius >= dx*dx + dy*dy;
+    /**
+     * Determine if Position falls within Circle.
+     *
+     * @param {unstdlib.Position} pos  Position to check.
+     * @param {unstdlib.Circle} circle Bounding circular container for pos.
+     *
+     * @return {boolean}
+     */
+    var in_radius = unstdlib.in_radius = function(pos, circle) {
+        var dx = pos.x - circle.x, dy = pos.y - circle.y;
+        return circle.radius*circle.radius >= dx*dx + dy*dy;
     }
 
+    /**
+     * Get the center Position of Box.
+     *
+     * @param {unstdlib.Box} box  Bounding container to get center of.
+     *
+     * @return {unstdlib.Position}
+     */
     var boundary_center = unstdlib.boundary_center = function(box) {
-        return [box[0] - (box[0]-box[2]) / 2, box[1] - (box[1]-box[3]) / 2];
+        return {x: box.x - box.width / 2, y: box.y - box.height / 2};
     }
 
-    var bounding_square = unstdlib.bounding_square = function(pos, size) {
-        // Given pos [x1, y1] with size scalar, returns boundary [x1, y1, x2, y2]
-        return [pos[0], pos[1]+size, pos[1], pos[1]+size];
-    }
-
+    /**
+     * Rotate a two-dimensional Vector by a given angle.
+     *
+     * @param {unstdlib.Vector} vector  Vector to rotate.
+     * @param {number} angle            Angle to rotate Vector by (in Radians).
+     *
+     * @return {unstdlib.Vector}
+     */
     var rotate = unstdlib.rotate = function(vector, angle) {
-        // Rotate vector by angle (in radians)
-        var x = vector[0], y = vector[1];
         var sin = Math.sin(angle), cos = Math.cos(angle);
-        return [x * cos - y * sin, x * sin + y * cos];
+        return {x: vector.x * cos - vector.y * sin, y: vector.x * sin + vector.y * cos};
     }
 
 
-    /** Grids */
+    /**
+     * Grid tools.
+     */
 
+    /**
+     * Make a two-dimensional grid of a given Size such that each cell's value is determined by
+     * a callback for each position.
+     *
+     * @param {unstdlib.Size} size  Size of the 2D grid.
+     * @param {function(unstdlib.Position)} fn  Callback called for each Position in the grid, return value is used for the grid in the respective position.
+     *
+     * @return {Array.<Array>}
+     */
     var make_grid = unstdlib.make_grid = function(size, fn) {
-        // size -> [dx, dy]
-        // fn -> Value to use based on position.
-        // Returns a 2d grid of dimensions `size`.
         var grid = [];
-        for (var x=0, width=size[0]; x<width; x++) {
+        for (var x=0, w=size.width; x<w; x++) {
+
             var row = [];
-            for(var y=0, height=size[1]; y<height; y++) row.push(fn([x,y]));
+            for(var y=0, h=size.height; y<h; y++) row.push(fn({x:x , y:y}));
+
             grid.push(row);
         }
         return grid;
     }
 
+    /**
+     * Make a two-dimensional grid of a given Size such that each cell has the same value.
+     *
+     * (A faster and simpler implementation of unstdlib.make_grid)
+     *
+     * @param {unstdlib.Size} size  Size of the 2D grid.
+     * @param {*} value             Value to use for each cell in the grid.
+     *
+     * @return {Array.<Array>}
+     */
     var make_grid_fast = unstdlib.make_grid_fast = function(size, value) {
-        // Similar to ``make_grid`` but takes a fixed value instead of making a
-        // function call for each cell.
         var grid = [];
-        var w = size[0]-1, h = size[1]-1;
-        for (var x=w; x>=0; x--) {
+        var w = size.width, h = size.height;
+        for (var x=w; x>0; x--) {
+
             var row = [];
-            for(var y=h; y>=0; y--) row.push(value);
+            for(var y=h; y>0; y--) row.push(value);
+
             grid.push(row);
         }
         return grid;
     }
 
+    /**
+     * Iterate over the Positions of a given Box by making a Callback to fn with
+     * each Position.
+     *
+     * @param {unstdlib.Box} box  Bounding container of the box to iterate over.
+     * @param {function(unstdlib.Position)} fn  Callback called for each Position in the Box.
+     */
     var iter_box = unstdlib.iter_box = function(box, fn) {
         // Given a box, call fn with the position of each element.
-        var x1 = box[0], y1 = box[1], x2 = box[2], y2 = box[3];
+        var x1 = box.x, y1 = box.y, x2 = x1 + box.width, y2 = y1 + box.height;
 
         for(var x=x1; x<=x2; x++) {
             for(var y=y1; y<=y2; y++) {
-                fn([x, y]);
+                fn({x: x, y: y});
             }
         }
     }
 
+    /**
+     * Iterate over the Positions in a straight line between Position A and
+     * Position B (inclusive) by making a Callback to fn with
+     * each Position along the path.
+     *
+     * Implemented using Bresenham's line algorithm as described here:
+     * http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+     *
+     * @param {unstdlib.Position} A  Position to start the line from.
+     * @param {unstdlib.Position} B  Position to stop the line at.
+     * @param {function(unstdlib.Position)} fn  Callback called for each Position along the line. If the callback returns false, the iteration is aborted.
+     */
     var iter_line = unstdlib.iter_line = function(A, B, fn) {
-        // Bresenham's line algorithm from point A to point B.
-
-        var x0 = A[0], x1 = B[0], y0 = A[1], y1 = B[1];
+        var x0 = A.x, x1 = B.x, y0 = A.y, y1 = B.y;
 
         var steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
         if(steep) {
-            x0 = A[1]; y0 = A[0]; // Swap x0 <-> y0
-            x1 = B[1]; y1 = B[0]; // Swap x1 <-> y1
+            x0 = A.y; y0 = A.x; // Swap x0 <-> y0
+            x1 = B.y; y1 = B.x; // Swap x1 <-> y1
         }
 
         if(x0 > x1) {
@@ -92,8 +168,8 @@ var unstdlib = (function(unstdlib) {
 
         var r;
         for(var x=x0, y=y0, stop=x1; x<=stop; x++) {
-            if(steep) r = fn([y,x])
-            else r = fn([x,y]);
+            if(steep) r = fn({x: y, y: x})
+            else r = fn({x: x, y: y});
 
             if(r==false) return false;
 
@@ -103,18 +179,6 @@ var unstdlib = (function(unstdlib) {
                 error += dx;
             }
         }
-    }
-
-
-    /**
-     * Convert a three-dimensional position tuple ``pos`` in the form of [x,y,z]
-     * into a one-dimensional absolute position based on sizes defined in ``dim``.
-     *
-     * @param   {array} dim Three size integers defining the size of each [x,y,z] dimension.
-     * @param   {array} pos Three position integers for an [x,y,z] coordinate.
-     */
-    var flat_3d_idx = unstdlib.flat_3d_idx = function(dim, pos) {
-        return (pos[0] * dim[0] * dim[2]) + (pos[1] * dim[2]) + pos[2];
     }
 
     return unstdlib;
