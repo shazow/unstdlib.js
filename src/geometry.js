@@ -53,7 +53,10 @@ var unstdlib = (function(unstdlib) {
      * @return {unstdlib.Position}
      */
     var boundary_center = unstdlib.boundary_center = function(box) {
-        return {x: box.x - box.width / 2, y: box.y - box.height / 2};
+        return {
+            x: box.x - box.width / 2,
+            y: box.y - box.height / 2
+        };
     }
 
     /**
@@ -66,7 +69,10 @@ var unstdlib = (function(unstdlib) {
      */
     var rotate = unstdlib.rotate = function(vector, angle) {
         var sin = Math.sin(angle), cos = Math.cos(angle);
-        return {x: vector.x * cos - vector.y * sin, y: vector.x * sin + vector.y * cos};
+        return {
+            x: vector.x * cos - vector.y * sin,
+            y: vector.x * sin + vector.y * cos
+        };
     }
 
 
@@ -75,11 +81,13 @@ var unstdlib = (function(unstdlib) {
      */
 
     /**
-     * Make a two-dimensional grid of a given Size such that each cell's value is determined by
-     * a callback for each position.
+     * Make a two-dimensional grid of a given Size such that each cell's value
+     * is determined by a callback for each position.
      *
      * @param {unstdlib.Size} size  Size of the 2D grid.
-     * @param {function(unstdlib.Position)} fn  Callback called for each Position in the grid, return value is used for the grid in the respective position.
+     * @param {function(number, number)} fn  Callback called for each x and y
+     *     position in the grid, return value is used for the grid in the
+     *     respective position.
      *
      * @return {Array.<Array>}
      */
@@ -88,7 +96,7 @@ var unstdlib = (function(unstdlib) {
         for (var x=0, w=size.width; x<w; x++) {
 
             var row = [];
-            for(var y=0, h=size.height; y<h; y++) row.push(fn({x:x , y:y}));
+            for(var y=0, h=size.height; y<h; y++) row.push(fn(x, y));
 
             grid.push(row);
         }
@@ -96,7 +104,8 @@ var unstdlib = (function(unstdlib) {
     }
 
     /**
-     * Make a two-dimensional grid of a given Size such that each cell has the same value.
+     * Make a two-dimensional grid of a given Size such that each cell has the
+     * same value.
      *
      * (A faster and simpler implementation of unstdlib.make_grid)
      *
@@ -120,10 +129,11 @@ var unstdlib = (function(unstdlib) {
 
     /**
      * Iterate over the Positions of a given Box by making a Callback to fn with
-     * each Position.
+     * each x and y posititon (inclusive).
      *
      * @param {unstdlib.Box} box  Bounding container of the box to iterate over.
-     * @param {function(unstdlib.Position)} fn  Callback called for each Position in the Box.
+     * @param {function(number, number)} fn  Callback called for each x and y
+     *     position in the bounding Box.
      */
     var iter_box = unstdlib.iter_box = function(box, fn) {
         // Given a box, call fn with the position of each element.
@@ -131,7 +141,7 @@ var unstdlib = (function(unstdlib) {
 
         for(var x=x1; x<=x2; x++) {
             for(var y=y1; y<=y2; y++) {
-                fn({x: x, y: y});
+                fn(x, y);
             }
         }
     }
@@ -139,14 +149,16 @@ var unstdlib = (function(unstdlib) {
     /**
      * Iterate over the Positions in a straight line between Position A and
      * Position B (inclusive) by making a Callback to fn with
-     * each Position along the path.
+     * each x and y along the path.
      *
      * Implemented using Bresenham's line algorithm as described here:
      * http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
      *
      * @param {unstdlib.Position} A  Position to start the line from.
      * @param {unstdlib.Position} B  Position to stop the line at.
-     * @param {function(unstdlib.Position)} fn  Callback called for each Position along the line. If the callback returns false, the iteration is aborted.
+     * @param {function(number, number)} fn  Callback called for each x and y
+     *     position along the line. If the callback returns {@code false}, the
+     *     iteration is aborted.
      */
     var iter_line = unstdlib.iter_line = function(A, B, fn) {
         var x0 = A.x, x1 = B.x, y0 = A.y, y1 = B.y;
@@ -168,10 +180,10 @@ var unstdlib = (function(unstdlib) {
 
         var r;
         for(var x=x0, y=y0, stop=x1; x<=stop; x++) {
-            if(steep) r = fn({x: y, y: x})
-            else r = fn({x: x, y: y});
+            if(steep) r = fn(y, x)
+            else r = fn(x, y);
 
-            if(r==false) return false;
+            if(r===false) return false;
 
             error -= dy;
             if(error < 0) {
