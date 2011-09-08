@@ -46,11 +46,18 @@ test("iter_box", function() {
     });
 
     var cells = [];
-    unstdlib.iter_box({x: 1, y: 1, width: 1, height: 1}, function(x, y) {
+    unstdlib.iter_box({x: 1, y: 1, width: 2, height: 2}, function(x, y) {
         cells.push(grid[x][y]);
     });
 
-    deepEqual([5,6,9,10], cells);
+    deepEqual(cells, [5,6,9,10]);
+
+    var counter = 0;
+    unstdlib.iter_box({x: 0, y: 0, width: 4, height: 4}, function(x, y) {
+        counter += grid[x][y];
+    });
+
+    equal(counter, 120);
 });
 
 test("iter_line", function() {

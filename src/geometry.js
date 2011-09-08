@@ -139,8 +139,8 @@ var unstdlib = (function(unstdlib) {
         // Given a box, call fn with the position of each element.
         var x1 = box.x, y1 = box.y, x2 = x1 + box.width, y2 = y1 + box.height;
 
-        for(var x=x1; x<=x2; x++) {
-            for(var y=y1; y<=y2; y++) {
+        for(var x=x1; x<x2; x++) {
+            for(var y=y1; y<y2; y++) {
                 fn(x, y);
             }
         }
