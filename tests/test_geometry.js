@@ -41,13 +41,13 @@ test("make_grid_fast", function() {
 
 test("iter_box", function() {
     var counter = 0;
-    var grid = unstdlib.make_grid({width: 4, height: 4}, function(pos) {
+    var grid = unstdlib.make_grid({width: 4, height: 4}, function(x, y) {
         return counter++;
     });
 
     var cells = [];
-    unstdlib.iter_box({x: 1, y: 1, width: 1, height: 1}, function(pos) {
-        cells.push(grid[pos.x][pos.y]);
+    unstdlib.iter_box({x: 1, y: 1, width: 1, height: 1}, function(x, y) {
+        cells.push(grid[x][y]);
     });
 
     deepEqual([5,6,9,10], cells);
@@ -55,20 +55,20 @@ test("iter_box", function() {
 
 test("iter_line", function() {
     var counter = 0;
-    var grid = unstdlib.make_grid({width: 4, height: 4}, function(pos) {
+    var grid = unstdlib.make_grid({width: 4, height: 4}, function(x, y) {
         return counter++;
     });
 
     var cells = [];
-    unstdlib.iter_line({x: 0, y: 0}, {x: 3, y: 3}, function(pos) {
-        cells.push(grid[pos.y][pos.x]);
+    unstdlib.iter_line({x: 0, y: 0}, {x: 3, y: 3}, function(x, y) {
+        cells.push(grid[y][x]);
     });
 
     deepEqual([0,5,10,15], cells);
 
     var cells = [];
-    unstdlib.iter_line({x: 0, y: 0}, {x: 3, y: 2}, function(pos) {
-        cells.push(grid[pos.y][pos.x]);
+    unstdlib.iter_line({x: 0, y: 0}, {x: 3, y: 2}, function(x, y) {
+        cells.push(grid[y][x]);
     });
 
     deepEqual([0,5,6,11], cells);
